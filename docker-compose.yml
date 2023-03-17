@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: cakephp_app
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 8000:80
+    environment:
+      TZ: "Asia/Tokyo"
+    depends_on:
+      - db
+  
+  db:
+    container_name: cakephp_db
+    platform: linux/x86_64
+    image: mysql:5.7
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_DATABASE: cakephp_db
+      MYSQL_ROOT_PASSWORD: root_password
+       
+  mailhog:
+    container_name: cakephp_mailhog
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+ 
+volumes:
+  db-data:
+    external: false
+  
